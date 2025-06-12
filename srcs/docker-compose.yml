@@ -39,7 +39,7 @@ services:
     depends_on:
       - wordpress
     ports:
-      - "8443:443"
+      - "443:443"
 
 volumes:
   mariadb_data:
