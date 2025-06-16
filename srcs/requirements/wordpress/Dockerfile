@@ -1,30 +1,17 @@
 FROM debian:bullseye
 
-RUN apt update -y && apt upgrade -y \
-    && apt-get install -y mariadb-client wget php7.4 php7.4-fpm php7.4-mysql
+RUN apt update && apt upgrade -y && \
+    apt install -y wget \
+                   php7.4-fpm \
+                   php7.4-mysql \
+                   mariadb-client
 
-# Créer le répertoire pour le socket PHP-FPM
-RUN mkdir -p /run/php/ && chown -R www-data:www-data /run/php
+RUN mkdir -p /var/www/html/wordpress && \
+    chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html
 
-# Installer WordPress
-RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www \
-    && cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz \
-    && chown -R www-data:www-data /var/www/wordpress
+COPY ./tools/wordpress.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/wordpress.sh
 
-# Installer WP-CLI
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp
-
-COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
-
-COPY ./conf/auto_config.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/auto_config.sh
-
-WORKDIR /var/www/wordpress
-
-EXPOSE 9000
-
-ENTRYPOINT ["/usr/local/bin/auto_config.sh"]
-
+ENTRYPOINT ["/usr/local/bin/wordpress.sh"]
 CMD ["php-fpm7.4", "-F"]
