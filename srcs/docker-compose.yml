@@ -47,13 +47,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/ozdemir/data/mariadb
+      device: ${DATA_PATH}/mariadb
   wordpress_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/ozdemir/data/wordpress
+      device: ${DATA_PATH}/wordpress
 
 networks:
   inception:
