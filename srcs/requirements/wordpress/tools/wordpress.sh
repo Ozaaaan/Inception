@@ -4,6 +4,11 @@
 mkdir -p /run/php/
 sed -i 's|listen = /run/php/php7.4-fpm.sock|listen = 9000|' /etc/php/7.4/fpm/pool.d/www.conf
 
+until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
+    echo "Attente de MariaDB..."
+    sleep 2
+done
+
 # Installation de WP-CLI si manquant
 if ! command -v wp &> /dev/null; then
     wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar

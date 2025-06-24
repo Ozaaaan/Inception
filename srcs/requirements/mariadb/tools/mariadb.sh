@@ -3,8 +3,8 @@
 mysqld_safe &
 
 until mysqladmin ping --silent; do
-        echo "Attente que MariaDB soit prêt..."
-        sleep 2
+    echo "Attente de MariaDB..."
+    sleep 2
 done
 
 mysql -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
@@ -15,6 +15,6 @@ mysql -e "FLUSH PRIVILEGES;"
 
 mysqladmin -u root -p$SQL_ROOT_PASSWORD shutdown
 
-echo "Database setup completed!"
+echo "Database Prete !"
 
 exec mysqld_safe
